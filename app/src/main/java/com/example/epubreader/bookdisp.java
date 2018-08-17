@@ -1,5 +1,7 @@
 package com.example.epubreader;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
@@ -22,50 +24,67 @@ import org.json.JSONObject;
 import java.net.URL;
 import java.util.ArrayList;
 
+import static com.example.epubreader.language.preference;
+import static com.example.epubreader.language.saveit;
+
 public class bookdisp extends AppCompatActivity {
 
     private RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     Bitmap z;
+    ArrayList<book> books=new ArrayList<>();
+    ArrayList<String> myDataset=new ArrayList<>();
+    ArrayList<String> myDataset1=new ArrayList<>();
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        new fetchbook().execute();
         setContentView(R.layout.activity_bookdisp);
         // use this setting to improve performance if you know that changes
         // in content do not change the layout size of the RecyclerView
+
+
+
+        // specify an adapter (see also next example)
+
+       // myDataset.add("https://firebasestorage.googleapis.com/v0/b/test-150af.appspot.com/o/temp6.jpeg?alt=media&token=ce44356f-26d9-4571-9669-febde42f4796");
+     //   myDataset.add("https://firebasestorage.googleapis.com/v0/b/test-150af.appspot.com/o/temp7.jpeg?alt=media&token=fe7230ab-bd01-4847-8c0b-256851606e10");
+      //  myDataset.add("https://firebasestorage.googleapis.com/v0/b/test-150af.appspot.com/o/temp8.jpeg?alt=media&token=46f0c2ef-2d6b-47cc-a885-e59ce7b630bf");
+       // myDataset1.add("test1");
+       // myDataset1.add("test2");
+       // myDataset1.add("test3");
+
+
+
+
+
+
+
+    }
+    void last()
+    {
         mRecyclerView=(RecyclerView)findViewById(R.id.my_recycler_view);
         mRecyclerView.setHasFixedSize(true);
 
         // use a linear layout manager
         mLayoutManager = new GridLayoutManager(this,3);
         mRecyclerView.setLayoutManager(mLayoutManager);
-
-        // specify an adapter (see also next example)
-        String[] myDataset=new String[3];
-        String[] myDataset1=new String[3];
-        myDataset[0]="https://firebasestorage.googleapis.com/v0/b/test-150af.appspot.com/o/temp6.jpeg?alt=media&token=ce44356f-26d9-4571-9669-febde42f4796";
-        myDataset[1]="https://firebasestorage.googleapis.com/v0/b/test-150af.appspot.com/o/temp7.jpeg?alt=media&token=fe7230ab-bd01-4847-8c0b-256851606e10";
-        myDataset[2]="https://firebasestorage.googleapis.com/v0/b/test-150af.appspot.com/o/temp8.jpeg?alt=media&token=46f0c2ef-2d6b-47cc-a885-e59ce7b630bf";
-        myDataset1[0]="test1";
-        myDataset1[1]="test2";
-        myDataset1[2]="test3";
         mAdapter = new MyAdapter(myDataset,myDataset1);
         mRecyclerView.setAdapter(mAdapter);
-
     }
 
     public class MyAdapter extends RecyclerView.Adapter<MyAdapter.ViewHolder> {
-        private String[] image;
-        private String[] name;
+        private ArrayList<String> image;
+        private ArrayList<String> name;
 
 
         // Provide a reference to the views for each data item
         // Complex data items may need more than one view per item, and
         // you provide access to all the views for a data item in a view holder
-        public  class ViewHolder extends RecyclerView.ViewHolder {
+        public class ViewHolder extends RecyclerView.ViewHolder {
             // each data item is just a string in this case
             public TextView mTextView;
             public ImageView imageView;
@@ -73,14 +92,14 @@ public class bookdisp extends AppCompatActivity {
             public ViewHolder(View itemView) {
                 super(itemView);
                 mTextView = itemView.findViewById(R.id.album_title);
-                imageView=itemView.findViewById(R.id.album);
+                imageView = itemView.findViewById(R.id.album);
             }
         }
 
         // Provide a suitable constructor (depends on the kind of dataset)
-        public MyAdapter(String[] image,String[] name) {
+        public MyAdapter(ArrayList<String> image, ArrayList<String> name) {
             this.image = image;
-            this.name=name;
+            this.name = name;
         }
 
         // Create new views (invoked by the layout manager)
@@ -100,49 +119,76 @@ public class bookdisp extends AppCompatActivity {
         public void onBindViewHolder(ViewHolder holder, int position) {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
-       //     new fetchlang().execute(image[position]);
+            //     new fetchlang().execute(image[position]);
 
-               // holder.imageView.setImageBitmap(z);
-            Picasso.with(getApplicationContext()).load(image[position]).into(holder.imageView);
-                holder.mTextView.setText(name[position]);
-
+            // holder.imageView.setImageBitmap(z);
+            Picasso.with(getApplicationContext()).load(image.get(position)).into(holder.imageView);
+            holder.mTextView.setText(name.get(position));
 
 
         }
 
         @Override
         public int getItemCount() {
-            return image.length;
+            return image.size();
         }
-   /*     class fetchlang extends AsyncTask<String,Void,Bitmap> {
+    }
+       class fetchbook extends AsyncTask<Void,Void,Void> {
 
 
             @Override
-            protected Bitmap doInBackground(String... urls) {
+            protected Void doInBackground(Void... arg0) {
                 try {
-                    URL url=new URL(urls[0]);
-                    Bitmap bmp = BitmapFactory.decodeStream(url.openConnection().getInputStream());
+                    SharedPreferences sf4=getSharedPreferences(preference, Context.MODE_PRIVATE);
+                    String lang = sf4.getString(saveit,"");
+                    JSONArray json = jsonbookfinder.readJsonFromUrl("http://workshop.creatorslane.org/Wesley/Books/dir.php");
+                    for (int i=0;i<json.length();i++)
+                    {
 
-                    return bmp;
+                        JSONArray j1= (JSONArray) json.getJSONObject(i).get("Languages");
+                        int count=0;
+                        for (int j=0;j<j1.length();j++)
+                        {
+
+                            if (j1.get(j).toString().equals(lang)) {
+                                count++;
+                            }
+                        }
+                        if (count==1) {
+                            urlHelper u=new urlHelper();
+                            books.add(new book(json.getJSONObject(i).get("Name").toString(),lang,u.ToBook(json.getJSONObject(i).get("Name").toString(),lang),u.ToCoverArt(json.getJSONObject(i).get("Name").toString(),lang)));
+                        }
+
+
+                    }
+
+
                 }
                 catch (Exception r)
                 {
                     System.err.println(r);
-                    return null;
+
                 }
 
+                return null;
 
 
             }
             @Override
-            protected void onPostExecute(Bitmap result)
+            protected void onPostExecute(Void result)
             {
-             z=result;
-             System.err.println(result);
+                for(book x:books) {
+                    myDataset.add(x.getCover());
+                    myDataset1.add(x.getname());
+                    System.err.println(x.getCover());
+                }
+
+                last();
+
             }
 
-        } */
+        }
 
 
-    }
+
 }

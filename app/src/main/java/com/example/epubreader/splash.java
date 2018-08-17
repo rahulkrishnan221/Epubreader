@@ -26,7 +26,7 @@ public class splash extends AppCompatActivity {
                 // This method will be executed once the timer is over
                 // Start your app main activity
 
-                startActivity(new Intent(splash.this,MainActivity.class));
+                startActivity(new Intent(splash.this,language.class));
                 // close this activity
            /*     Config config = new Config().setThemeColor(R.color.colorPrimaryDark);
                 FolioReader folioReader = FolioReader.getInstance(getApplicationContext());

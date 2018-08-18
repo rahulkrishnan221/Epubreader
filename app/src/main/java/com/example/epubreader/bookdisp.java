@@ -1,6 +1,7 @@
 package com.example.epubreader;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -116,7 +117,7 @@ public class bookdisp extends AppCompatActivity {
 
         // Replace the contents of a view (invoked by the layout manager)
         @Override
-        public void onBindViewHolder(ViewHolder holder, int position) {
+        public void onBindViewHolder(ViewHolder holder, final int position) {
             // - get element from your dataset at this position
             // - replace the contents of the view with that element
             //     new fetchlang().execute(image[position]);
@@ -124,8 +125,17 @@ public class bookdisp extends AppCompatActivity {
             // holder.imageView.setImageBitmap(z);
             Picasso.with(getApplicationContext()).load(image.get(position)).into(holder.imageView);
             holder.mTextView.setText(name.get(position));
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    book ob=books.get(position);
+                    Intent i=new Intent(bookdisp.this,MainActivity.class);
+                    i.putExtra("file",ob.getStorage());
+                    startActivity(i);
 
 
+                }
+            });
         }
 
         @Override
@@ -180,7 +190,7 @@ public class bookdisp extends AppCompatActivity {
                 for(book x:books) {
                     myDataset.add(x.getCover());
                     myDataset1.add(x.getname());
-                    System.err.println(x.getCover());
+
                 }
 
                 last();

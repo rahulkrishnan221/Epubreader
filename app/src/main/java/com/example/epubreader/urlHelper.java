@@ -4,12 +4,16 @@ public class urlHelper {
     String BasePath = "http://workshop.creatorslane.org/Wesley/Books/";
     public String ToBook(String BookName, String Language)
     {
-        return BasePath + BookName + "/" + Language + "/book.epub";
+        String temp=BasePath + BookName + "/" + Language + "/book.epub";
+        String tempx=temp.replace(' ','_');
+        return tempx;
     }
 
     public String ToCoverArt(String BookName, String Language)
     {
-        return BasePath + BookName + "/" + Language + "/.cover.png";
+       String temp= BasePath + BookName + "/" + Language + "/.cover.png";
+        String tempx=temp.replace(' ','_');
+        return tempx;
     }
 
  /*   public String ToGetBooks()

@@ -26,8 +26,10 @@
             android:name="com.folioreader.ui.folio.activity.FolioActivity"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".MainActivity" />
-        <activity android:name=".language" />
-        <activity android:name=".bookdisp"></activity>
+        <activity android:name=".language"
+            android:theme="@style/CustomActivityTheme" />
+        <activity android:name=".bookdisp"
+            android:theme="@style/CustomActivityTheme"></activity>
     </application>
 
 </manifest>

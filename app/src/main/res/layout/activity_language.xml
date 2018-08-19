@@ -5,20 +5,44 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.epubreader.language">
-    <ListView
-        android:id="@+id/list"
-        android:choiceMode="singleChoice"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="350dp" />
+        android:layout_height="0.5dp"
+        android:background="@drawable/rectangle_line"></TextView>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:text="Select Language"
+            android:textStyle="bold"
+            android:textSize="15dp"/>
 
-    <Button
-        android:id="@+id/langok"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/list"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="33dp"
-        android:text="@string/OK"
-        tools:layout_editor_absoluteX="148dp"
-        tools:layout_editor_absoluteY="402dp" />
+        <ListView
+            android:id="@+id/list"
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="15dp"
+            android:choiceMode="singleChoice" />
+
+        <Button
+            android:id="@+id/langok"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/list"
+            android:layout_centerHorizontal="true"
+            android:layout_gravity="center"
+            android:layout_marginTop="33dp"
+            android:background="@drawable/rbutton"
+            android:textColor="@color/colorPrimary"
+            android:text="@string/OK" />
+
+    </LinearLayout>
+
+
+
 </RelativeLayout>

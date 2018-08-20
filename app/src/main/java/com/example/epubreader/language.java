@@ -36,6 +36,10 @@ public class language extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_language);
+        sf4 = getSharedPreferences(preference, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor3=sf4.edit();
+        editor3.putString(saveit,"null");
+        editor3.commit();
          listView=(ListView) findViewById(R.id.list);
          buttonlang=(Button)findViewById(R.id.langok);
         buttonlang.setOnClickListener(new View.OnClickListener() {
@@ -105,5 +109,16 @@ public class language extends AppCompatActivity {
         {
             views(langname);
         }
+    }
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        finish();
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+
+
     }
 }

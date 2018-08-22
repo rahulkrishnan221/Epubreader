@@ -22,6 +22,8 @@ public class splash extends AppCompatActivity {
         setContentView(R.layout.activity_splash);
         SharedPreferences sf4=getSharedPreferences(preference, Context.MODE_PRIVATE);
         final String lang = sf4.getString(saveit,"");
+        System.err.println(lang);
+        System.err.println("test");
         new Handler().postDelayed(new Runnable() {
 
             /*
@@ -32,10 +34,13 @@ public class splash extends AppCompatActivity {
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app main activity
-                if (lang.equals("null"))
-                    startActivity(new Intent(splash.this,language.class));
-                else
-                startActivity(new Intent(splash.this,bookdisp.class));
+                if (lang.equals("null")||lang.length()<=0) {
+                    startActivity(new Intent(splash.this, language.class));
+                    System.err.println(lang);
+                }
+                else {
+                    startActivity(new Intent(splash.this, bookdisp.class));
+                }
                 // close this activity
            /*     Config config = new Config().setThemeColor(R.color.colorPrimaryDark);
                 FolioReader folioReader = FolioReader.getInstance(getApplicationContext());

@@ -26,34 +26,76 @@ public class MainActivity extends AppCompatActivity {
         progressDialog=ProgressDialog.show(MainActivity.this,"Please wait","Hold on......",true,true);
         setContentView(R.layout.activity_main);
         String value=getIntent().getStringExtra("file");
-      File f=new File(String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS)));
 
-
+        System.err.println(value);
        String temp="";
+       int pos=0;
+       String language="";
+       String language1="";
+       String bookname="";
+       String bookname1="";
        String temp1="";
        for (int i=value.length()-1;i>=0;i--)
        {
-           if (value.charAt(i)=='/')
+           if (value.charAt(i)=='/') {
+               pos=i;
                break;
+           }
            else
                temp=temp+value.charAt(i);
 
        }
-       for (int i=temp.length()-1;i>=0;i--)
-       temp1=temp1+temp.charAt(i);
-        File fx=new File(String.valueOf(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS))+"/"+temp1);
+       temp1=reverser(temp);
+
+       for (int i=pos-1;i>=0;i--)
+       {
+           if (value.charAt(i)=='/')
+           {
+               pos=i;
+               break;
+           }
+           else
+               language=language+value.charAt(i);
+       }
+       language1=reverser(language);
+
+       for (int i=pos-1;i>=0;i--)
+       {
+           if (value.charAt(i)=='/')
+           {
+               pos=i;
+               break;
+           }
+           else
+               bookname=bookname+value.charAt(i);
+       }
+       bookname1=reverser(bookname);
+       temp1=bookname1+"_"+temp1;
+        File storageDir = new File(
+                String.valueOf(Environment.getExternalStoragePublicDirectory("Ebooks"+"/"+language1+"/"+bookname1))
+        );
+        if(storageDir.exists())
+            System.err.println("Do Nothing");
+        if(!storageDir.exists())
+       storageDir.mkdirs();
+
+        System.err.println(storageDir.getPath());
+
+
+
+        File fx=new File(String.valueOf(Environment.getExternalStoragePublicDirectory("Ebooks"+"/"+language1+"/"+bookname1+"/"+temp1)));
         if (!fx.exists()) {
 
             DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
             Uri uri = Uri.parse(value);
             DownloadManager.Request request = new DownloadManager.Request(uri);
           //  request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-            request.setDestinationInExternalPublicDir(Environment.DIRECTORY_DOWNLOADS, temp1);
+            request.setDestinationInExternalPublicDir("Ebooks"+"/"+language1+"/"+bookname1, temp1);
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
             Long reference = downloadManager.enqueue(request);
             final File fx1=fx;
-            final File fx2=f;
+            final File fx2=fx;
             final String tempx=temp1;
             new Handler().postDelayed(new Runnable() {
 
@@ -76,38 +118,21 @@ public class MainActivity extends AppCompatActivity {
 
         }
         if (fx.exists())
-            test(fx,f,temp1);
+            test(fx,fx,temp1);
 
 
-/*
-       //File directory = new File(Environment.getDataDirectory() + "/RobotiumTestLog/");
-        File mydir = this.getDir("usersx", Context.MODE_APPEND);
-        if (!mydir.exists())
-        {
-            System.err.println("HELLO");
-            mydir.mkdirs();
-        }
-        if (mydir.exists())
-        {
-            System.err.println(mydir.getPath());
 
-        }
-        mydir.delete();
-        System.err.println(mydir.exists());
-       System.err.println(mydir.getPath());
 
-    /*   if (directory.exists())
-       {
-           Toast.makeText(this, "Done", Toast.LENGTH_SHORT).show();
-       }
-       if (!directory.exists())
-       {
-           System.err.println(directory.canWrite());
-           if(!directory.mkdir())
-               System.err.println("Hello");
-           else
-               directory.mkdir();
-       } */
+    }
+
+
+
+    public String reverser(String z)
+    {
+        String z1="";
+        for (int i=z.length()-1;i>=0;i--)
+            z1=z1+z.charAt(i);
+        return z1;
     }
     void test(File fx,File f,String temp1)
     {
@@ -115,13 +140,16 @@ public class MainActivity extends AppCompatActivity {
             progressDialog.dismiss();
             System.err.println("Kaam set");
 
+
             Config config = new Config().setThemeColor(R.color.colorPrimaryDark);
             FolioReader folioReader = FolioReader.getInstance(getApplicationContext());
-            System.out.println(folioReader);
-            folioReader.setConfig(config, true).openBook(f.getPath() + "/" + temp1);
-            finish();
+            System.out.println(fx.getPath());
+            folioReader.setConfig(config, true).openBook(fx.getPath());
+finish();
         }
+
     }
+
 
 
 

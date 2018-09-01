@@ -1,11 +1,19 @@
 package com.example.epubreader;
 
+import android.*;
+import android.Manifest;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.GridLayoutManager;
@@ -18,6 +26,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -39,6 +48,8 @@ public class bookdisp extends AppCompatActivity {
     ArrayList<book> books=new ArrayList<>();
     ArrayList<String> myDataset=new ArrayList<>();
     ArrayList<String> myDataset1=new ArrayList<>();
+    private int STORAGE_PERMISSION_CODE=1;
+    String storagebabu="";
 
 
     @Override
@@ -149,10 +160,20 @@ public class bookdisp extends AppCompatActivity {
             holder.itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    book ob=books.get(position);
-                    Intent i=new Intent(bookdisp.this,MainActivity.class);
-                    i.putExtra("file",ob.getStorage());
-                    startActivity(i);
+                    if (ContextCompat.checkSelfPermission(bookdisp.this, Manifest.permission.WRITE_EXTERNAL_STORAGE)  ==PackageManager.PERMISSION_GRANTED)
+                    {
+                        book ob=books.get(position);
+                        Intent i=new Intent(bookdisp.this,MainActivity.class);
+                        i.putExtra("file",ob.getStorage());
+                        startActivity(i);
+                }
+                else {
+                        book ob=books.get(position);
+                        storagebabu= ob.getStorage();
+                        requestStoragePermission();
+
+                    }
+
 
 
                 }
@@ -231,7 +252,32 @@ public class bookdisp extends AppCompatActivity {
 
 
     }
+    private void requestStoragePermission()
+    {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this,Manifest.permission.WRITE_EXTERNAL_STORAGE))
+        {
 
+                            ActivityCompat.requestPermissions(bookdisp.this,new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},STORAGE_PERMISSION_CODE);
 
+        }
+        else
+        {
+            ActivityCompat.requestPermissions(this,new String[] {Manifest.permission.WRITE_EXTERNAL_STORAGE},STORAGE_PERMISSION_CODE);
+        }
+    }
 
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+       if (requestCode == STORAGE_PERMISSION_CODE)
+       {
+           if (grantResults.length>0 && grantResults[0]==PackageManager.PERMISSION_GRANTED)
+           {
+               Intent i=new Intent(bookdisp.this,MainActivity.class);
+               i.putExtra("file",storagebabu);
+               startActivity(i);
+           }
+           else
+               Toast.makeText(this, "Permission not granted", Toast.LENGTH_SHORT).show();
+       }
+    }
 }

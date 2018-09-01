@@ -62,7 +62,7 @@ public class language extends AppCompatActivity {
                     SharedPreferences.Editor editor4 = sf4.edit();
                     editor4.putString(saveit, langkey.get(Integer.parseInt(positionholder)));
                     editor4.commit();
-                    Toast.makeText(language.this, sf4.getString(saveit,""), Toast.LENGTH_SHORT).show();
+               //     Toast.makeText(language.this, sf4.getString(saveit,""), Toast.LENGTH_SHORT).show();
                     finish();
                     startActivity(new Intent(language.this,bookdisp.class));
                 }

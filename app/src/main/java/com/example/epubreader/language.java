@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -27,6 +28,7 @@ public class language extends AppCompatActivity {
     ProgressDialog progressDialog;
     String positionholder="";
     Button buttonlang;
+    SwipeRefreshLayout swipeRefreshLayout;
     ArrayList<String> langkey = new ArrayList<>();
     public static final String preference="ref";
     public static final String saveit="savekey";
@@ -42,6 +44,14 @@ public class language extends AppCompatActivity {
         editor3.commit();
          listView=(ListView) findViewById(R.id.list);
          buttonlang=(Button)findViewById(R.id.langok);
+         swipeRefreshLayout=(SwipeRefreshLayout)findViewById(R.id.swipe_refresh);
+         swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+             @Override
+             public void onRefresh() {
+                 execute();
+
+             }
+         });
         buttonlang.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -53,6 +63,7 @@ public class language extends AppCompatActivity {
                     editor4.putString(saveit, langkey.get(Integer.parseInt(positionholder)));
                     editor4.commit();
                     Toast.makeText(language.this, sf4.getString(saveit,""), Toast.LENGTH_SHORT).show();
+                    finish();
                     startActivity(new Intent(language.this,bookdisp.class));
                 }
 
@@ -62,9 +73,16 @@ public class language extends AppCompatActivity {
 
         progressDialog=ProgressDialog.show(language.this,"Please wait","Hold on......",true,true);
 
+        execute();
 
+
+
+    }
+
+    public void execute()
+    {
         new fetchlang().execute();
-
+        swipeRefreshLayout.setRefreshing(false);
     }
     void views(ArrayList<String> test)
     {

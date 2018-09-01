@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "748771719658",
+    "firebase_url": "https://epub-reader-6d225.firebaseio.com",
+    "project_id": "epub-reader-6d225",
+    "storage_bucket": "epub-reader-6d225.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:748771719658:android:f50d872b51aaa892",
+        "android_client_info": {
+          "package_name": "com.example.epubreader"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "748771719658-mllut1d7m5ducb7ot6felp92nctv699f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.epubreader",
+            "certificate_hash": "b295de7be408b8cc10a908542b2a84bde36b63bd"
+          }
+        },
+        {
+          "client_id": "748771719658-gttp3158k0f6tju5saskglbolc4pjt1e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAWgL-GKoajHRAbNhEfescLO8uBk5oQZ44"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "748771719658-gttp3158k0f6tju5saskglbolc4pjt1e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

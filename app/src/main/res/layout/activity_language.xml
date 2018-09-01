@@ -16,6 +16,10 @@
             android:text="Select Language"
             android:textStyle="bold"
             android:textSize="15dp"/>
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:layout_width="match_parent"
+            android:layout_height="350dp"
+            android:id="@+id/swipe_refresh">
 
         <ListView
             android:id="@+id/list"
@@ -24,6 +28,7 @@
             android:divider="@android:color/transparent"
             android:dividerHeight="15dp"
             android:choiceMode="singleChoice" />
+        </android.support.v4.widget.SwipeRefreshLayout>
 
         <Button
             android:id="@+id/langok"

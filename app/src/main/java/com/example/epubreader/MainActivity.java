@@ -2,9 +2,11 @@ package com.example.epubreader;
 
 import android.app.DownloadManager;
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
@@ -19,107 +21,99 @@ import java.io.File;
 
 public class MainActivity extends AppCompatActivity {
     ProgressDialog progressDialog;
+    Long refid;
+     File fx1;
+    File fx2;
+    String tempx;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        progressDialog=ProgressDialog.show(MainActivity.this,"Please wait","Hold on......",true,true);
+        progressDialog = ProgressDialog.show(MainActivity.this, "Please wait", "Hold on......", true, true);
         setContentView(R.layout.activity_main);
-        String value=getIntent().getStringExtra("file");
+        String value = getIntent().getStringExtra("file");
 
         System.err.println(value);
-       String temp="";
-       int pos=0;
-       String language="";
-       String language1="";
-       String bookname="";
-       String bookname1="";
-       String temp1="";
-       for (int i=value.length()-1;i>=0;i--)
-       {
-           if (value.charAt(i)=='/') {
-               pos=i;
-               break;
-           }
-           else
-               temp=temp+value.charAt(i);
+        String temp = "";
+        int pos = 0;
+        String language = "";
+        String language1 = "";
+        String bookname = "";
+        String bookname1 = "";
+        String temp1 = "";
+        for (int i = value.length() - 1; i >= 0; i--) {
+            if (value.charAt(i) == '/') {
+                pos = i;
+                break;
+            } else
+                temp = temp + value.charAt(i);
 
-       }
-       temp1=reverser(temp);
+        }
+        temp1 = reverser(temp);
 
-       for (int i=pos-1;i>=0;i--)
-       {
-           if (value.charAt(i)=='/')
-           {
-               pos=i;
-               break;
-           }
-           else
-               language=language+value.charAt(i);
-       }
-       language1=reverser(language);
+        for (int i = pos - 1; i >= 0; i--) {
+            if (value.charAt(i) == '/') {
+                pos = i;
+                break;
+            } else
+                language = language + value.charAt(i);
+        }
+        language1 = reverser(language);
 
-       for (int i=pos-1;i>=0;i--)
-       {
-           if (value.charAt(i)=='/')
-           {
-               pos=i;
-               break;
-           }
-           else
-               bookname=bookname+value.charAt(i);
-       }
-       bookname1=reverser(bookname);
-       temp1=bookname1+"_"+temp1;
+        for (int i = pos - 1; i >= 0; i--) {
+            if (value.charAt(i) == '/') {
+                pos = i;
+                break;
+            } else
+                bookname = bookname + value.charAt(i);
+        }
+        bookname1 = reverser(bookname);
+        temp1 = bookname1 + "_" + temp1;
         File storageDir = new File(
-                String.valueOf(Environment.getExternalStoragePublicDirectory("Ebooks"+"/"+language1+"/"+bookname1))
+                String.valueOf(Environment.getExternalStoragePublicDirectory("Ebooks" + "/" + language1 + "/" + bookname1))
         );
-        if(storageDir.exists())
+        if (storageDir.exists())
             System.err.println("Do Nothing");
-        if(!storageDir.exists())
-       storageDir.mkdirs();
+        if (!storageDir.exists())
+            storageDir.mkdirs();
 
         System.err.println(storageDir.getPath());
 
 
-
-        File fx=new File(String.valueOf(Environment.getExternalStoragePublicDirectory("Ebooks"+"/"+language1+"/"+bookname1+"/"+temp1)));
+        File fx = new File(String.valueOf(Environment.getExternalStoragePublicDirectory("Ebooks" + "/" + language1 + "/" + bookname1 + "/" + temp1)));
         if (!fx.exists()) {
 
             DownloadManager downloadManager = (DownloadManager) getSystemService(Context.DOWNLOAD_SERVICE);
             Uri uri = Uri.parse(value);
             DownloadManager.Request request = new DownloadManager.Request(uri);
-          //  request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-            request.setDestinationInExternalPublicDir("Ebooks"+"/"+language1+"/"+bookname1, temp1);
+            //  request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
+            request.setDestinationInExternalPublicDir("Ebooks" + "/" + language1 + "/" + bookname1, temp1);
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE);
             request.setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED);
-            Long reference = downloadManager.enqueue(request);
-            final File fx1=fx;
-            final File fx2=fx;
-            final String tempx=temp1;
-            new Handler().postDelayed(new Runnable() {
+            refid = downloadManager.enqueue(request);
+            DownloadManager.Query quer = new DownloadManager.Query();
+            quer.setFilterById(refid);
+            Cursor cursor = downloadManager.query(quer);
+            int d = 0;
+            if (cursor.moveToFirst()) {
+                d = cursor.getColumnIndex(DownloadManager.COLUMN_STATUS);
 
-                /*
-                     * Showing splash screen with a timer. This will be useful when you
-                     * want to show case your app logo / company
-                     */
-                @Override
-                public void run() {
-                  if (fx1.exists())
+            }
 
-                    test(fx1,fx2,tempx);
-                  else
-                      Toast.makeText(MainActivity.this, "Wait", Toast.LENGTH_SHORT).show();
+            fx1=fx;
+            fx2=fx;
+            tempx=temp1;
 
-                }
-            }, 10000);
+            IntentFilter intentFilter = new IntentFilter(DownloadManager.ACTION_DOWNLOAD_COMPLETE);
+            registerReceiver(new Download(), intentFilter);
 
 
 
         }
         if (fx.exists())
+        {
             test(fx,fx,temp1);
-
+        }
 
 
 
@@ -149,7 +143,23 @@ finish();
         }
 
     }
+    private class Download extends BroadcastReceiver {
 
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            long ref=intent.getLongExtra(DownloadManager.EXTRA_DOWNLOAD_ID,-1);
+            if(ref == MainActivity.this.refid)
+            {
+                Toast toast=Toast.makeText(getApplicationContext(),"Download complete",Toast.LENGTH_LONG);
+                toast.show();
+                if (fx1.exists())
+
+                    test(fx1,fx2,tempx);
+
+            }
+            //MainActivity.this.updateButton();
+        }
+    }
 
 
 

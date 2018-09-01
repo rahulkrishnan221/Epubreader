@@ -9,17 +9,20 @@ import android.os.Bundle;
 
 import com.folioreader.Config;
 import com.folioreader.FolioReader;
+import com.google.firebase.auth.FirebaseAuth;
 
 import static com.example.epubreader.language.preference;
 import static com.example.epubreader.language.saveit;
 
 public class splash extends AppCompatActivity {
     private static int SPLASH_TIME_OUT = 2000;
+    private FirebaseAuth firebaseAuth;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_splash);
+        firebaseAuth = FirebaseAuth.getInstance();
         SharedPreferences sf4=getSharedPreferences(preference, Context.MODE_PRIVATE);
         final String lang = sf4.getString(saveit,"");
         System.err.println(lang);
@@ -34,20 +37,35 @@ public class splash extends AppCompatActivity {
             public void run() {
                 // This method will be executed once the timer is over
                 // Start your app main activity
-                if (lang.equals("null")||lang.length()<=0) {
-                    startActivity(new Intent(splash.this, language.class));
-                    System.err.println(lang);
+                if (firebaseAuth.getCurrentUser()!=null)
+                {
+                    if (lang.equals("null")||lang.length()<=0) {
+                        //language
+                        finish();
+                        startActivity(new Intent(splash.this, language.class));
+                        System.err.println(lang);
+                    }
+                    else {
+                        //bookdisp
+                        finish();
+                        startActivity(new Intent(splash.this, bookdisp.class));
+                    }
+
                 }
-                else {
-                    startActivity(new Intent(splash.this, bookdisp.class));
+                else
+                {
+                    finish();
+                    startActivity(new Intent(splash.this,loginf.class));
                 }
+
+
                 // close this activity
            /*     Config config = new Config().setThemeColor(R.color.colorPrimaryDark);
                 FolioReader folioReader = FolioReader.getInstance(getApplicationContext());
                 System.out.println(folioReader);
                 folioReader.setConfig(config, true).openBook(R.raw.adventures);
                 */
-                finish();
+
             }
         }, SPLASH_TIME_OUT);
     }

@@ -100,6 +100,7 @@ public class language extends AppCompatActivity {
     }
     class fetchlang extends AsyncTask<Void,Void,Void> {
         ArrayList<String> langname = new ArrayList<>();
+        ArrayList<String> langx = new ArrayList<>();
 
         @Override
         protected Void doInBackground(Void... arg0) {
@@ -108,10 +109,16 @@ public class language extends AppCompatActivity {
                 JSONArray jsonArray = (JSONArray) json.get("Languages");
 
                 for (int i = 0; i < jsonArray.length(); i++) {
-                    langname.add(jsonArray.get(i).toString());
+                    langx.add(jsonArray.get(i).toString());
+                    if (jsonArray.get(i).toString().equals("Hindi"))
+                        langname.add("हिंदी");
+                    else if (jsonArray.get(i).toString().equals("Tamil"))
+                        langname.add("தமிழ்");
+                    else
+                        langname.add(jsonArray.get(i).toString());
                 }
                 JSONObject jsonObject = (JSONObject) json.get("Loc");
-                for (String str : langname) {
+                for (String str : langx) {
                     langkey.add(jsonObject.get(str).toString());
                 }
 
@@ -125,6 +132,7 @@ public class language extends AppCompatActivity {
         @Override
         protected void onPostExecute(Void result)
         {
+
             views(langname);
         }
     }

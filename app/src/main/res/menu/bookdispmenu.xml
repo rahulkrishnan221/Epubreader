@@ -9,5 +9,10 @@
         android:icon="@drawable/icons82"
         app:showAsAction="always"
         android:title="@string/LanguageChooserTitle"/>
+    <item
+        android:id="@+id/mute"
+        android:icon="@drawable/mute"
+        app:showAsAction="always"
+        android:title="Silent Mode"/>
 
 </menu>

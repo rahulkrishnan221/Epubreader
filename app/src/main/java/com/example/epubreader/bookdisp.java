@@ -114,14 +114,17 @@ public class bookdisp extends AppCompatActivity {
                     switch (audioManager.getRingerMode())
                     {
                         case AudioManager.RINGER_MODE_SILENT:
+                            item.setIcon(R.drawable.speaker);
                             audioManager.setRingerMode(AudioManager.RINGER_MODE_NORMAL);
                             Toast.makeText(this, "Silent mode Deactivated", Toast.LENGTH_SHORT).show();
                             break;
                         case AudioManager.RINGER_MODE_NORMAL:
+                            item.setIcon(R.drawable.mute);
                             audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                             Toast.makeText(this, "Silent mode Activated", Toast.LENGTH_SHORT).show();
                             break;
                         default:
+                            item.setIcon(R.drawable.mute);
                             audioManager.setRingerMode(AudioManager.RINGER_MODE_SILENT);
                             Toast.makeText(this, "Silent mode Activated", Toast.LENGTH_SHORT).show();
                     }

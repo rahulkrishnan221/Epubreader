@@ -133,13 +133,22 @@ public class MainActivity extends AppCompatActivity {
         if (fx.exists()) {
             progressDialog.dismiss();
             System.err.println("Kaam set");
+            if(fx.getPath().contains(".epub")) {
 
+                Config config = new Config().setThemeColor(R.color.colorPrimaryDark);
+                FolioReader folioReader = FolioReader.getInstance(getApplicationContext());
+                System.out.println(fx.getPath());
+                folioReader.setConfig(config, true).openBook(fx.getPath());
+                finish();
+            }
+            else
+            {
+                Intent i=new Intent(MainActivity.this,pdfreader.class);
+                i.putExtra("pdf",fx.getPath());
+                finish();
+                startActivity(i);
 
-            Config config = new Config().setThemeColor(R.color.colorPrimaryDark);
-            FolioReader folioReader = FolioReader.getInstance(getApplicationContext());
-            System.out.println(fx.getPath());
-            folioReader.setConfig(config, true).openBook(fx.getPath());
-finish();
+            }
         }
 
     }

@@ -251,7 +251,7 @@ public class bookdisp extends AppCompatActivity {
                         }
                         if (count==1) {
                             urlHelper u=new urlHelper();
-                            books.add(new book(json.getJSONObject(i).get("Name").toString(),lang,u.ToBook(json.getJSONObject(i).get("Name").toString(),lang),u.ToCoverArt(json.getJSONObject(i).get("Name").toString(),lang)));
+                            books.add(new book(json.getJSONObject(i).get("Name").toString(),lang,u.ToBook(json.getJSONObject(i).get("Name").toString(),lang,json.getJSONObject(i).get("Files").toString()),u.ToCoverArt(json.getJSONObject(i).get("Name").toString(),lang)));
                         }
 
 
